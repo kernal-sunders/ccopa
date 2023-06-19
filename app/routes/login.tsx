@@ -16,8 +16,8 @@ export default function Login() {
     return(
         <>
          <Form method="post" className="min-h-screen">
-            <input type="email" name="email" placeholder="you@foo.net" /> {" "}
-            <input type="password" name="password" /> {" "}
+            <input type="email" name="email" placeholder="foo@bar.me" />
+            <input type="password" name="password" />
             <button type="submit">Log In</button>
          </Form>
         </>
