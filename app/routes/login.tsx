@@ -1,10 +1,15 @@
-import { ActionArgs } from "@remix-run/node";
+import supabaseServer from 'utils/supabase.server'
+import { ActionArgs, Response, json } from "@remix-run/node";
 import { Form } from "@remix-run/react";
-import { useOutletContext } from "@remix-run/react"
-import type { SupabaseOutletContext } from 'app/root'
 
 export async function action({request}:ActionArgs) {
-    return null
+  const response = new Response()
+  const supabase = supabaseServer({request, response})
+  const formData = await request.formData()
+  const values = Object.fromEntries(formData)
+  const login = await supabase.auth.signInWithPassword({...values})
+  
+  return json({login}, {headers: response.headers})
 }
 
 export default function Login() {
