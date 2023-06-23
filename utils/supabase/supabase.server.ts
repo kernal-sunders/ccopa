@@ -1,4 +1,3 @@
-import { Response, Request } from "@remix-run/node";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 
 import type { Database } from "db_types";
