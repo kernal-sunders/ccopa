@@ -15,12 +15,16 @@
     "@remix-run/serve": "^1.17.0",
     "@supabase/auth-helpers-remix": "^0.2.1",
     "@supabase/supabase-js": "^2.25.0",
+    "domain-functions": "^1.7.1",
     "flowbite": "^1.6.5",
     "flowbite-react": "^0.4.7",
     "isbot": "^3.6.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^4.9.0"
+    "react-hook-form": "^7.45.0",
+    "react-icons": "^4.9.0",
+    "remix-forms": "^1.6.3",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.17.0",

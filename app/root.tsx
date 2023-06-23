@@ -1,6 +1,10 @@
-import CSS from '~/css/app.css'
-import Menu from 'components/Nav'
-import { json, Response, type LinksFunction, type LoaderArgs } from "@remix-run/node";
+import CSS from "./css/app.css";
+import {
+  json,
+  Response,
+  type LinksFunction,
+  type LoaderArgs,
+} from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -11,54 +15,57 @@ import {
   useLoaderData,
   useRevalidator,
 } from "@remix-run/react";
-import { SupabaseClient } from '@supabase/supabase-js';
-import { useEffect, useState } from 'react';
-import createServerSupabase from "utils/supabase.server"
-import { createBrowserClient } from '@supabase/auth-helpers-remix';
-import Footer from 'components/Footer';
+import { SupabaseClient } from "@supabase/supabase-js";
+import { useEffect, useState } from "react";
+import createServerSupabase from "utils/supabase/supabase.server";
+import { createBrowserClient } from "@supabase/auth-helpers-remix";
 
-
-import type { Database } from 'db_types';
-type TypedSupabaseClient = SupabaseClient<Database>
+import type { Database } from "db_types";
+type TypedSupabaseClient = SupabaseClient<Database>;
 
 export type SupabaseOutletContext = {
-  supabase: TypedSupabaseClient
-}
+  supabase: TypedSupabaseClient;
+};
 
 export const links: LinksFunction = () => {
-  return [{rel: 'stylesheet', href: CSS}]
-}
+  return [{ rel: "stylesheet", href: CSS }];
+};
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const env = {
     SUPABASE_URL: process.env.SUPABASE_URL!,
-    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY!
-  }
+    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY!,
+  };
 
-  const response = new Response()
-  const supabase = createServerSupabase({request, response})
-  const {data: {session}} = await supabase.auth.getSession()
-  
-  return json({env, session}, {headers: response.headers})
-}
+  const response = new Response();
+  const supabase = createServerSupabase({ request, response });
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  return json({ env, session }, { headers: response.headers });
+};
 
 export default function App() {
-  const {env, session} = useLoaderData<typeof loader>()
-  const [supabase] = useState(() => createBrowserClient<Database>(env.SUPABASE_URL, env.SUPABASE_ANON_KEY))
-  const revalidator = useRevalidator()
-  const serverAccessToken = session?.access_token
+  const { env, session } = useLoaderData<typeof loader>();
+  const [supabase] = useState(() =>
+    createBrowserClient<Database>(env.SUPABASE_URL, env.SUPABASE_ANON_KEY)
+  );
+  const revalidator = useRevalidator();
+  const serverAccessToken = session?.access_token;
 
-    useEffect(() => {
+  useEffect(() => {
     const {
-      data: { subscription }} = supabase.auth.onAuthStateChange((event, session) => {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.access_token !== serverAccessToken) {
         revalidator.revalidate();
       }
     });
 
-  return () => subscription.unsubscribe()
-}, [serverAccessToken])
-  
+    return () => subscription.unsubscribe();
+  }, [serverAccessToken]);
+
   return (
     <html lang="en">
       <head>
@@ -67,13 +74,11 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className='bg-slate-300'>
-        <Menu />
-        <Outlet context={{supabase}} />
+      <body className="bg-slate-300">
+        <Outlet context={{ supabase }} />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-        <Footer />
       </body>
     </html>
   );
